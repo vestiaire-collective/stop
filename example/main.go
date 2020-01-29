@@ -14,7 +14,7 @@ func main() {
 	for i := range make([]int, 5) {
 		go func(i int) {
 			for {
-				if stop.Interrupted() {
+				if stop.Stopped() {
 					fmt.Printf("stopping %+v...\n", i)
 
 					break

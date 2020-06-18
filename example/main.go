@@ -3,41 +3,31 @@ package main
 import (
 	"fmt"
 	"github.com/chaseisabelle/stop"
+	"sync"
 	"time"
 )
 
 func main() {
 	stop.Listen()
 
-	c := make(chan struct{})
+	w := sync.WaitGroup{}
+
+	w.Add(5)
 
 	for i := range make([]int, 5) {
 		go func(i int) {
-			for {
-				if stop.Stopped() {
-					fmt.Printf("stopping %+v...\n", i)
+			defer w.Done()
 
-					break
-				}
-
+			for !stop.Stopped() {
 				fmt.Printf("sleeping %+v...\n", i)
-
 				time.Sleep(1 * time.Second)
 			}
 
-			c <- struct{}{}
+			fmt.Printf("stopping %+v...\n", i)
 		}(i)
 	}
 
-	i := 0
-
-	for range c {
-		i++
-
-		if i >= 5 {
-			break
-		}
-	}
+	w.Wait()
 
 	println("stopped")
 }

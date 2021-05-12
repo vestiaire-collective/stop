@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/chaseisabelle/stop"
 	"sync"
 	"time"
+
+	"github.com/vestiaire-collective/stop"
 )
 
 func main() {
